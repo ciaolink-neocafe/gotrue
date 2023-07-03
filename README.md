@@ -692,7 +692,7 @@ Controls the number of digits of the sms otp sent.
 
 `SMS_PROVIDER` - `string`
 
-Available options are: `twilio`, `messagebird`, `textlocal`, and `vonage`
+Available options are: `twilio`, `messagebird`, `textlocal`, `vonage`, and `gateway`
 
 Then you can use your [twilio credentials](https://www.twilio.com/docs/usage/requests-to-twilio#credentials):
 
@@ -704,6 +704,21 @@ Or Messagebird credentials, which can be obtained in the [Dashboard](https://das
 
 - `SMS_MESSAGEBIRD_ACCESS_KEY` - your Messagebird access key
 - `SMS_MESSAGEBIRD_ORIGINATOR` - SMS sender (your Messagebird phone number with + or company name)
+
+Alternatively you can use a custom SMS gateway:
+- `SMS_GATEWAY_URL` - the URL of your SMS gateway
+- `SMS_GATEWAY_SENDER` - sender number
+- `SMS_GATEWAY_BEARER_TOKEN` - optional token added to the `Authorization` header
+
+GoTrue will send the following to your SMS gateway:
+```json
+{
+  "recipient": "+1 234 567",
+  "body": "This is from supabase. Your code is 123456 .",
+  "sender": "<sender_number>"
+}
+```
+GoTrue will only consider the HTTP code returned from your SMS gateway; it ignores the rest of the response (e.g., response body and response type).
 
 ### CAPTCHA
 

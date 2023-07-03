@@ -207,6 +207,7 @@ type SmsProviderConfiguration struct {
 	Messagebird  MessagebirdProviderConfiguration  `json:"messagebird"`
 	Textlocal    TextlocalProviderConfiguration    `json:"textlocal"`
 	Vonage       VonageProviderConfiguration       `json:"vonage"`
+	Gateway      GatewayProviderConfiguration      `json:"gateway"`
 }
 
 type TwilioProviderConfiguration struct {
@@ -235,6 +236,12 @@ type VonageProviderConfiguration struct {
 	ApiKey    string `json:"api_key" split_words:"true"`
 	ApiSecret string `json:"api_secret" split_words:"true"`
 	From      string `json:"from" split_words:"true"`
+}
+
+type GatewayProviderConfiguration struct {
+	Url         string `json:"url" split_words:"true"`
+	Sender      string `json:"sender" split_words:"true"`
+	BearerToken string `json:"bearer_token" split_words:"true"`
 }
 
 type CaptchaConfiguration struct {
@@ -527,6 +534,16 @@ func (t *VonageProviderConfiguration) Validate() error {
 	}
 	if t.From == "" {
 		return errors.New("missing Vonage 'from' parameter")
+	}
+	return nil
+}
+
+func (t *GatewayProviderConfiguration) Validate() error {
+	if t.Url == "" {
+		return errors.New("Missing gateway url")
+	}
+	if t.Sender == "" {
+		return errors.New("Missing gateway sender")
 	}
 	return nil
 }
