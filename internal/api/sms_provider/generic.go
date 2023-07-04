@@ -10,22 +10,22 @@ import (
 	"github.com/supabase/gotrue/internal/utilities"
 )
 
-type GatewayProvider struct {
-	Config *conf.GatewayProviderConfiguration
+type GenericProvider struct {
+	Config *conf.GenericProviderConfiguration
 }
 
 // Creates a SmsProvider with the gateway Config
-func NewGatewayProvider(config conf.GatewayProviderConfiguration) (SmsProvider, error) {
+func NewGenericProvider(config conf.GenericProviderConfiguration) (SmsProvider, error) {
 	if err := config.Validate(); err != nil {
 		return nil, err
 	}
 
-	return &GatewayProvider{
+	return &GenericProvider{
 		Config: &config,
 	}, nil
 }
 
-func (t *GatewayProvider) SendMessage(phone string, message string, channel string) (string, error) {
+func (t *GenericProvider) SendMessage(phone string, message string, channel string) (string, error) {
 	switch channel {
 	case SMSProvider:
 		return t.SendSms(phone, message)
@@ -35,7 +35,7 @@ func (t *GatewayProvider) SendMessage(phone string, message string, channel stri
 }
 
 // Send an SMS containing the OTP with gateway
-func (t *GatewayProvider) SendSms(phone string, message string) (string, error) {
+func (t *GenericProvider) SendSms(phone string, message string) (string, error) {
 	body, err := json.Marshal(map[string]string{
 		"recipient": phone,
 		"body":      message,

@@ -11,7 +11,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"github.com/supabase/gotrue/internal/conf"
-	"gopkg.in/h2non/gock.v1"
 )
 
 var handleApiRequest func(*http.Request) (*http.Response, error)
@@ -56,9 +55,9 @@ func TestSmsProvider(t *testing.T) {
 					ApiKey: "test_api_key",
 					Sender: "test_sender",
 				},
-				Gateway: conf.GatewayProviderConfiguration{
-					Url: "http://example.com",
-					Sender: "test_sender",
+				Generic: conf.GenericProviderConfiguration{
+					Url:         "http://example.com",
+					Sender:      "test_sender",
 					BearerToken: "test_bearer_token",
 				},
 			},
@@ -229,10 +228,10 @@ func (ts *SmsProviderTestSuite) TestTextLocalSendSms() {
 
 func (ts *SmsProviderTestSuite) TestGatewaySendSms() {
 	defer gock.Off()
-	provider, err := NewGatewayProvider(ts.Config.Sms.Gateway)
+	provider, err := NewGenericProvider(ts.Config.Sms.Generic)
 	require.NoError(ts.T(), err)
 
-	gatewayProvider, ok := provider.(*GatewayProvider)
+	gatewayProvider, ok := provider.(*GenericProvider)
 	require.Equal(ts.T(), true, ok)
 
 	phone := "123456789"
@@ -245,9 +244,9 @@ func (ts *SmsProviderTestSuite) TestGatewaySendSms() {
 	}
 
 	cases := []struct {
-		Desc           string
+		Desc            string
 		GatewayResponse *gock.Response
-		ExpectedError  error
+		ExpectedError   error
 	}{
 		{
 			Desc: "Successfully sent sms",
